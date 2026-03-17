@@ -14,8 +14,7 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🍫 Gourmet – R$ 20</div>
-    <div class="modal-sub">Escolha o sabor e personalize com adicionais</div>
-
+    <div class="modal-sub">Escolha o sabor, adicionais e quantidade</div>
     <div class="sabores-label">Escolha o sabor 👇</div>
     <div class="sabores-grid">
       <div class="sabor-btn" id="saborNutella" onclick="selecionarSabor('nutella')">
@@ -29,25 +28,28 @@
         <div class="sabor-ingredientes">Mousse de maracujá + Ninho</div>
       </div>
     </div>
-
     <div class="adicionais-label">Adicionais (opcional)</div>
     <div class="adicionais-grid">
       <div class="adic-btn" onclick="toggleAdic(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdic(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Granola',2)"><span class="adic-nome">🥜 Granola <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Nutella',3)"><span class="adic-nome">🍫 Nutella <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Ninho',2)"><span class="adic-nome">🥛 Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Nutella extra',3)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdic(this,'Paçoca',2)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
     </div>
-
+    <div class="qty-label">Quantidade</div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQtyGourmet(-1)">−</button>
+      <span class="qty-num" id="qtyGourmet">1</span>
+      <button class="qty-btn" onclick="changeQtyGourmet(1)">+</button>
+    </div>
     <div class="resumo">
       <div class="resumo-linha"><span>🍫 Gourmet</span><span>R$ 20,00</span></div>
       <div id="resumoAdics"></div>
       <div class="resumo-total"><span>Total</span><span id="totalGourmet">R$ 20,00</span></div>
     </div>
-
-    <button class="btn-confirmar" id="btnConfirmarGourmet" onclick="confirmarPedidoGourmet()" disabled>
-      💬 Pedir pelo WhatsApp
+    <button class="btn-confirmar" id="btnConfirmarGourmet" onclick="adicionarGourmetCarrinho()" disabled>
+      🛒 Adicionar ao carrinho
     </button>
     <button class="btn-fechar" onclick="fecharModal('modalGourmet')">Voltar</button>
   </div>
@@ -58,42 +60,69 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🥛 Tradicional – R$ 15</div>
-    <div class="modal-sub">Açaí cremoso com recheio clássico</div>
-
-    <div class="sabores-label">Composição do pedido</div>
+    <div class="modal-sub">Personalize com adicionais e quantidade</div>
+    <div class="sabores-label">Composição</div>
     <div class="tradicional-info">
       <div class="trad-item">🥤 Açaí cremoso na garrafa</div>
       <div class="trad-item">🥛 Leite condensado</div>
-      <div class="trad-item">🌸 Ninho</div>
+      <div class="trad-item">🌸 Leite Ninho</div>
       <div class="trad-item">🍬 Paçoca</div>
     </div>
-
     <div class="adicionais-label">Adicionais (opcional)</div>
     <div class="adicionais-grid">
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Granola',2)"><span class="adic-nome">🥜 Granola <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Nutella',3)"><span class="adic-nome">🍫 Nutella <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Ninho',2)"><span class="adic-nome">🥛 Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Nutella extra',3)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Paçoca',2)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite condensado',2)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
     </div>
-
+    <div class="qty-label">Quantidade</div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQtyTrad(-1)">−</button>
+      <span class="qty-num" id="qtyTrad">1</span>
+      <button class="qty-btn" onclick="changeQtyTrad(1)">+</button>
+    </div>
     <div class="resumo">
       <div class="resumo-linha"><span>🥛 Tradicional</span><span>R$ 15,00</span></div>
       <div id="resumoAdicsTrad"></div>
       <div class="resumo-total"><span>Total</span><span id="totalTradicional">R$ 15,00</span></div>
     </div>
-
-    <button class="btn-confirmar" onclick="confirmarPedidoTradicional()">
-      💬 Pedir pelo WhatsApp
+    <button class="btn-confirmar" onclick="adicionarTradCarrinho()">
+      🛒 Adicionar ao carrinho
     </button>
     <button class="btn-fechar" onclick="fecharModal('modalTradicional')">Voltar</button>
   </div>
 </div>
 
-<!-- PÁGINA PRINCIPAL -->
-<div class="wrap">
+<!-- MODAL CARRINHO -->
+<div class="modal-overlay" id="modalCarrinho" onclick="fecharSeOverlay(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🛒 Meu Carrinho</div>
+    <div class="modal-sub">Revise seu pedido antes de enviar</div>
+    <div id="cartLista"></div>
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotalVal">R$ 0,00</span>
+    </div>
+    <button class="btn-whatsapp-cart" onclick="finalizarPedido()">
+      💬 Finalizar pelo WhatsApp
+    </button>
+    <button class="btn-fechar" onclick="fecharModal('modalCarrinho')">Continuar comprando</button>
+  </div>
+</div>
 
+<!-- CARRINHO FAB -->
+<div class="cart-fab" id="cartFab">
+  <button class="cart-btn" onclick="abrirCarrinho()">
+    🛒 <span class="cart-badge" id="cartBadge">0</span>
+    Ver carrinho · <span class="cart-total-fab" id="cartTotalFab">R$ 0,00</span>
+  </button>
+</div>
+
+<!-- PÁGINA -->
+<div class="wrap">
   <div class="hero">
     <div class="logo-ring"><div class="logo-inner">🍇</div></div>
     <h1 class="hero-title">Kiaçaí<br>Na Garrafa</h1>
@@ -123,7 +152,7 @@
       <div class="plano-preco"><span>R$</span> 15</div>
       <ul class="ingredientes">
         <li>Leite condensado</li>
-        <li>Ninho</li>
+        <li>Leite Ninho</li>
         <li>Paçoca</li>
       </ul>
     </div>
@@ -148,19 +177,7 @@
     </div>
   </div>
 
-  <div class="cta-section">
-    <div class="cta-msg">Faça seu pedido agora</div>
-    <a class="btn-whatsapp" href="https://wa.me/5527996900904" target="_blank">
-      💬 Pedir pelo WhatsApp
-    </a>
-    <div class="horario-box">
-      <div class="dot-live"></div>
-      Aberto todos os dias · (27) 99690-0904
-    </div>
-  </div>
-
   <footer>© 2025 Kiaçaí Na Garrafa · Vila Velha – ES</footer>
-
 </div>
 
 <script src="script.js"></script>
