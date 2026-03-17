@@ -108,7 +108,7 @@ body::after { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events
 .cart-total-fab { font-size: .9rem; opacity: .9; }
 
 /* MODAL OVERLAY */
-.modal-overlay { display: none; position: fixed; inset: 0; z-index: 100;
+.modal-overlay { display: none; /* js controla */ position: fixed; inset: 0; z-index: 100;
   background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
   align-items: flex-end; justify-content: center; }
 .modal-overlay.open { display: flex; animation: fadeOverlay .25s ease; }
