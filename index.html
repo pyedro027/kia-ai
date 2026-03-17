@@ -10,7 +10,7 @@
 <body>
 
 <!-- MODAL GOURMET -->
-<div class="modal-overlay" id="modalGourmet" onclick="fecharSeOverlay(event)">
+<div class="modal-overlay" id="modalGourmet" onclick="fecharSeOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🍫 Gourmet – R$ 20</div>
@@ -32,10 +32,10 @@
     <div class="adicionais-grid">
       <div class="adic-btn" onclick="toggleAdic(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdic(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Nutella extra',3)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
       <div class="adic-btn" onclick="toggleAdic(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Paçoca',2)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdic(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
     </div>
     <div class="qty-label">Quantidade</div>
     <div class="qty-row">
@@ -56,7 +56,7 @@
 </div>
 
 <!-- MODAL TRADICIONAL -->
-<div class="modal-overlay" id="modalTradicional" onclick="fecharSeOverlay(event)">
+<div class="modal-overlay" id="modalTradicional" onclick="fecharSeOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🥛 Tradicional – R$ 15</div>
@@ -72,10 +72,10 @@
     <div class="adicionais-grid">
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Nutella extra',3)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
       <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Paçoca',2)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite condensado',2)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
     </div>
     <div class="qty-label">Quantidade</div>
     <div class="qty-row">
@@ -96,7 +96,7 @@
 </div>
 
 <!-- MODAL CARRINHO -->
-<div class="modal-overlay" id="modalCarrinho" onclick="fecharSeOverlay(event)">
+<div class="modal-overlay" id="modalCarrinho" onclick="fecharSeOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🛒 Meu Carrinho</div>
@@ -114,7 +114,7 @@
 </div>
 
 <!-- CARRINHO FAB -->
-<div class="cart-fab" id="cartFab">
+<div class="cart-fab" id="cartFab" style="display:none">
   <button class="cart-btn" onclick="abrirCarrinho()">
     🛒 <span class="cart-badge" id="cartBadge">0</span>
     Ver carrinho · <span class="cart-total-fab" id="cartTotalFab">R$ 0,00</span>
