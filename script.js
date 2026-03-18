@@ -217,34 +217,55 @@ function selectPgto(tipo) {
   if (tipo === 'pix') gerarPix();
 }
 function gerarPix() {
-  const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
-  // Chave Pix do dono — trocar pelo número real
-  const chavePix = '27996900904';
-  const nome = 'Kiacai Na Garrafa';
-  const cidade = 'Vila Velha';
-  const valor = total.toFixed(2);
-  // Payload EMV padrão Pix
-  function fmt(id, val) {
-    const len = String(val.length).padStart(2,'0');
-    return id + len + val;
+  const total  = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
+  const chave  = '27996900904';
+  const nome   = 'KIACAI NA GARRAFA';
+  const cidade = 'VILA VELHA';
+  const valor  = total.toFixed(2);
+
+  function tlv(id, valor) {
+    const v   = String(valor);
+    const len = String(v.length).padStart(2, '0');
+    return id + len + v;
   }
-  function crc16(str) {
+
+  function crc16ccitt(str) {
     let crc = 0xFFFF;
     for (let i = 0; i < str.length; i++) {
       crc ^= str.charCodeAt(i) << 8;
-      for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+      for (let j = 0; j < 8; j++) {
+        crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      }
     }
-    return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
+    return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
   }
-  const gui  = fmt('00','BR.GOV.BCB.PIX') + fmt('01', chavePix);
-  const mai  = fmt('26', gui);
-  const txid = fmt('05','***');
-  const merch = fmt('59', nome.substring(0,25)) + fmt('60', cidade.substring(0,15)) + fmt('54', valor) + fmt('58','BR') + fmt('62', txid);
-  const partial = '000201' + mai + '52040000' + '5303986' + merch + '6304';
-  const payload = partial + crc16(partial);
-  document.getElementById('pixChave').textContent = payload;
-  // QR Code via API
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(payload);
+
+  // Merchant Account Info (campo 26)
+  const pixGui    = tlv('00', 'BR.GOV.BCB.PIX');
+  const pixChave  = tlv('01', chave);
+  const mai       = tlv('26', pixGui + pixChave);
+
+  // Additional Data (campo 62) — txid
+  const addData   = tlv('62', tlv('05', '***'));
+
+  // Monta payload sem CRC
+  const payload =
+    tlv('00', '01')          +  // Payload Format Indicator
+    tlv('01', '12')          +  // Point of Initiation (12 = reutilizável)
+    mai                      +  // Merchant Account Information
+    tlv('52', '0000')        +  // Merchant Category Code
+    tlv('53', '986')         +  // Transaction Currency (BRL)
+    tlv('54', valor)         +  // Transaction Amount
+    tlv('58', 'BR')          +  // Country Code
+    tlv('59', nome.substring(0,25)) +
+    tlv('60', cidade.substring(0,15)) +
+    addData                  +
+    '6304';                     // CRC placeholder
+
+  const fullPayload = payload + crc16ccitt(payload);
+
+  document.getElementById('pixChave').textContent = fullPayload;
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(fullPayload);
   document.getElementById('pixQrImg').src = qrUrl;
 }
 function copiarPix() {
