@@ -1,245 +1,297 @@
-// ── Estado ──
+
+// ── Estado global ──
 const state = {
-  gourmet: { sabor: null, adics: [], qty: 1 },
-  trad:    { adics: [], qty: 1 },
-  cart:    []
+  gourmet: { sabor: null, adics: [], qty: 1, obs: '' },
+  trad:    { adics: [], qty: 1, obs: '' },
+  cart:    [],
+  pgto:    null,
+  troco:   '',
+  endereco: '',
+  nome:    ''
 };
 
-// ── Modais ──
-function abrirModal(id) {
-  if (id === 'modalGourmet') resetGourmet();
-  if (id === 'modalTradicional') resetTrad();
+// ── Utils modal ──
+function openModal(id) {
   const el = document.getElementById(id);
   el.style.display = 'flex';
+  requestAnimationFrame(() => el.classList.add('open'));
   document.body.style.overflow = 'hidden';
-  setTimeout(() => el.classList.add('open'), 10);
 }
-
-function fecharModal(id) {
+function closeModal(id) {
   const el = document.getElementById(id);
   el.classList.remove('open');
   document.body.style.overflow = '';
-  setTimeout(() => { el.style.display = 'none'; }, 300);
+  setTimeout(() => { el.style.display = 'none'; }, 320);
+}
+function closeIfOverlay(e) {
+  if (e.target === e.currentTarget) closeModal(e.currentTarget.id);
 }
 
-function fecharSeOverlay(e) {
-  if (e.target === e.currentTarget) fecharModal(e.currentTarget.id);
-}
-
-// ── Reset ──
+// ── Reset modais produto ──
 function resetGourmet() {
-  state.gourmet = { sabor: null, adics: [], qty: 1 };
-  document.querySelectorAll('#modalGourmet .sabor-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#modalGourmet .adic-btn').forEach(b => b.classList.remove('active'));
-  const qty = document.getElementById('qtyGourmet');
-  if (qty) qty.textContent = '1';
-  atualizarResumoGourmet();
-  atualizarBtnGourmet();
+  state.gourmet = { sabor: null, adics: [], qty: 1, obs: '' };
+  document.querySelectorAll('#mgourmet .sabor-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#mgourmet .adic-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('gQty').textContent = '1';
+  document.getElementById('gObs').value = '';
+  atualizarResumoG();
+  document.getElementById('btnAddG').disabled = true;
 }
-
 function resetTrad() {
-  state.trad = { adics: [], qty: 1 };
-  document.querySelectorAll('#modalTradicional .adic-btn').forEach(b => b.classList.remove('active'));
-  const qty = document.getElementById('qtyTrad');
-  if (qty) qty.textContent = '1';
-  atualizarResumoTrad();
+  state.trad = { adics: [], qty: 1, obs: '' };
+  document.querySelectorAll('#mtrad .adic-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tQty').textContent = '1';
+  document.getElementById('tObs').value = '';
+  atualizarResumoT();
 }
 
-// ── GOURMET sabor ──
-function selecionarSabor(sabor) {
+// ── GOURMET ──
+function selectSabor(sabor) {
   state.gourmet.sabor = sabor;
-  document.querySelectorAll('#modalGourmet .sabor-btn').forEach(b => b.classList.remove('active'));
-  const id = 'sabor' + sabor.charAt(0).toUpperCase() + sabor.slice(1);
-  const el = document.getElementById(id);
-  if (el) el.classList.add('active');
-  atualizarResumoGourmet();
-  atualizarBtnGourmet();
+  document.querySelectorAll('#mgourmet .sabor-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s_' + sabor).classList.add('active');
+  atualizarResumoG();
+  document.getElementById('btnAddG').disabled = false;
 }
-
-// ── GOURMET adicionais ──
-function toggleAdic(el, nome, preco) {
+function toggleAdicG(el, nome, preco) {
   el.classList.toggle('active');
   const idx = state.gourmet.adics.findIndex(a => a.nome === nome);
   if (idx >= 0) state.gourmet.adics.splice(idx, 1);
   else state.gourmet.adics.push({ nome, preco: parseFloat(preco) });
-  atualizarResumoGourmet();
+  atualizarResumoG();
 }
-
-function changeQtyGourmet(d) {
+function changeQtyG(d) {
   state.gourmet.qty = Math.max(1, state.gourmet.qty + d);
-  document.getElementById('qtyGourmet').textContent = state.gourmet.qty;
-  atualizarResumoGourmet();
+  document.getElementById('gQty').textContent = state.gourmet.qty;
+  atualizarResumoG();
 }
-
-function atualizarResumoGourmet() {
-  const base = 20;
+function atualizarResumoG() {
   const extra = state.gourmet.adics.reduce((s, a) => s + a.preco, 0);
-  const unitario = base + extra;
-  const total = unitario * state.gourmet.qty;
-  const div = document.getElementById('resumoAdics');
-  if (!div) return;
-  let html = state.gourmet.adics
-    .map(a => `<div class="resumo-linha"><span>+ ${a.nome}</span><span>R$ ${a.preco.toFixed(2)}</span></div>`)
-    .join('');
+  const unit  = 20 + extra;
+  const total = unit * state.gourmet.qty;
+  let html = state.gourmet.adics.map(a =>
+    `<div class="resumo-linha"><span>+ ${a.nome}</span><span>R$ ${a.preco.toFixed(2)}</span></div>`).join('');
   if (state.gourmet.qty > 1)
-    html += `<div class="resumo-linha"><span>Quantidade</span><span>x${state.gourmet.qty}</span></div>`;
-  div.innerHTML = html;
-  document.getElementById('totalGourmet').textContent = 'R$ ' + total.toFixed(2);
+    html += `<div class="resumo-linha"><span>Qtd</span><span>x${state.gourmet.qty}</span></div>`;
+  document.getElementById('resumoG').innerHTML = html;
+  document.getElementById('totalG').textContent = 'R$ ' + total.toFixed(2);
+}
+function addGourmetCart() {
+  if (!state.gourmet.sabor) return;
+  const saboresMap = { nutella: 'Nutella (Nutella + Ninho + Paçoca)', maracuja: 'Maracujá (Mousse de Maracujá + Ninho)' };
+  const extra = state.gourmet.adics.reduce((s, a) => s + a.preco, 0);
+  state.cart.push({
+    id: Date.now(), tipo: 'Gourmet',
+    detalhe: saboresMap[state.gourmet.sabor],
+    adics: [...state.gourmet.adics],
+    unitario: 20 + extra,
+    qty: state.gourmet.qty,
+    obs: document.getElementById('gObs').value.trim()
+  });
+  closeModal('mgourmet');
+  updateFab();
 }
 
-function atualizarBtnGourmet() {
-  const btn = document.getElementById('btnConfirmarGourmet');
-  if (btn) btn.disabled = !state.gourmet.sabor;
-}
-
-// ── TRAD adicionais ──
-function toggleAdicTrad(el, nome, preco) {
+// ── TRADICIONAL ──
+function toggleAdicT(el, nome, preco) {
   el.classList.toggle('active');
   const idx = state.trad.adics.findIndex(a => a.nome === nome);
   if (idx >= 0) state.trad.adics.splice(idx, 1);
   else state.trad.adics.push({ nome, preco: parseFloat(preco) });
-  atualizarResumoTrad();
+  atualizarResumoT();
 }
-
-function changeQtyTrad(d) {
+function changeQtyT(d) {
   state.trad.qty = Math.max(1, state.trad.qty + d);
-  document.getElementById('qtyTrad').textContent = state.trad.qty;
-  atualizarResumoTrad();
+  document.getElementById('tQty').textContent = state.trad.qty;
+  atualizarResumoT();
 }
-
-function atualizarResumoTrad() {
-  const base = 15;
+function atualizarResumoT() {
   const extra = state.trad.adics.reduce((s, a) => s + a.preco, 0);
-  const unitario = base + extra;
-  const total = unitario * state.trad.qty;
-  const div = document.getElementById('resumoAdicsTrad');
-  if (!div) return;
-  let html = state.trad.adics
-    .map(a => `<div class="resumo-linha"><span>+ ${a.nome}</span><span>R$ ${a.preco.toFixed(2)}</span></div>`)
-    .join('');
+  const unit  = 15 + extra;
+  const total = unit * state.trad.qty;
+  let html = state.trad.adics.map(a =>
+    `<div class="resumo-linha"><span>+ ${a.nome}</span><span>R$ ${a.preco.toFixed(2)}</span></div>`).join('');
   if (state.trad.qty > 1)
-    html += `<div class="resumo-linha"><span>Quantidade</span><span>x${state.trad.qty}</span></div>`;
-  div.innerHTML = html;
-  document.getElementById('totalTradicional').textContent = 'R$ ' + total.toFixed(2);
+    html += `<div class="resumo-linha"><span>Qtd</span><span>x${state.trad.qty}</span></div>`;
+  document.getElementById('resumoT').innerHTML = html;
+  document.getElementById('totalT').textContent = 'R$ ' + total.toFixed(2);
 }
-
-// ── ADICIONAR AO CARRINHO ──
-function adicionarGourmetCarrinho() {
-  if (!state.gourmet.sabor) return;
-  const sabores = {
-    nutella:  'Nutella (Nutella + Ninho + Paçoca)',
-    maracuja: 'Maracujá (Mousse de Maracujá + Ninho)'
-  };
-  const base = 20;
-  const extra = state.gourmet.adics.reduce((s, a) => s + a.preco, 0);
-  state.cart.push({
-    id: Date.now(),
-    tipo: 'Gourmet',
-    detalhe: sabores[state.gourmet.sabor],
-    adics: [...state.gourmet.adics],
-    unitario: base + extra,
-    qty: state.gourmet.qty
-  });
-  fecharModal('modalGourmet');
-  atualizarCarrinhoFab();
-}
-
-function adicionarTradCarrinho() {
-  const base = 15;
+function addTradCart() {
   const extra = state.trad.adics.reduce((s, a) => s + a.preco, 0);
   state.cart.push({
-    id: Date.now(),
-    tipo: 'Tradicional',
+    id: Date.now(), tipo: 'Tradicional',
     detalhe: 'Leite condensado + Ninho + Paçoca',
     adics: [...state.trad.adics],
-    unitario: base + extra,
-    qty: state.trad.qty
+    unitario: 15 + extra,
+    qty: state.trad.qty,
+    obs: document.getElementById('tObs').value.trim()
   });
-  fecharModal('modalTradicional');
-  atualizarCarrinhoFab();
+  closeModal('mtrad');
+  updateFab();
 }
 
-// ── FAB CARRINHO ──
-function atualizarCarrinhoFab() {
-  const total    = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
-  const qtdTotal = state.cart.reduce((s, i) => s + i.qty, 0);
-  const fab = document.getElementById('cartFab');
+// ── FAB ──
+function updateFab() {
+  const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
+  const qtd   = state.cart.reduce((s, i) => s + i.qty, 0);
+  const fab   = document.getElementById('cartFab');
   if (state.cart.length > 0) {
-    fab.style.display = 'flex';
-    document.getElementById('cartBadge').textContent   = qtdTotal;
-    document.getElementById('cartTotalFab').textContent = 'R$ ' + total.toFixed(2);
+    fab.classList.remove('hidden');
+    document.getElementById('fabCount').textContent = qtd + (qtd === 1 ? ' item' : ' itens');
+    document.getElementById('fabTotal').textContent = 'R$ ' + total.toFixed(2);
   } else {
-    fab.style.display = 'none';
+    fab.classList.add('hidden');
   }
 }
 
-// ── ABRIR CARRINHO ──
-function abrirCarrinho() {
-  renderizarCarrinho();
-  const el = document.getElementById('modalCarrinho');
-  el.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => el.classList.add('open'), 10);
+// ── CARRINHO ──
+function openCarrinho() {
+  renderCart();
+  openModal('mcart');
 }
-
-// ── RENDERIZAR CARRINHO ──
-function renderizarCarrinho() {
-  const lista   = document.getElementById('cartLista');
+function renderCart() {
+  const lista = document.getElementById('cartLista');
   const totalEl = document.getElementById('cartTotalVal');
   if (state.cart.length === 0) {
-    lista.innerHTML = '<div class="cart-empty">🛒 Carrinho vazio</div>';
+    lista.innerHTML = '<div class="cart-empty">🛒 Seu carrinho está vazio</div>';
     totalEl.textContent = 'R$ 0,00';
     return;
   }
   lista.innerHTML = state.cart.map(item => {
-    const subtotal = (item.unitario * item.qty).toFixed(2);
-    const adicsStr = item.adics.length > 0
-      ? ' + ' + item.adics.map(a => a.nome).join(', ') : '';
+    const sub = (item.unitario * item.qty).toFixed(2);
+    const adicsStr = item.adics.length > 0 ? item.adics.map(a => a.nome).join(', ') : '';
+    const obsHtml = item.obs ? `<div class="ci-obs">📝 ${item.obs}</div>` : '';
     return `
       <div class="cart-item">
-        <div class="cart-item-header">
-          <div class="cart-item-nome">🍇 ${item.tipo}</div>
-          <button class="cart-item-remove" onclick="removerItem(${item.id})">✕</button>
+        <div class="ci-header">
+          <div class="ci-nome">🍇 ${item.tipo}</div>
+          <button class="ci-remove" onclick="removeItem(${item.id})">✕</button>
         </div>
-        <div class="cart-item-detail">${item.detalhe}${adicsStr}</div>
-        <div class="cart-item-footer">
-          <div class="cart-item-qty">
-            <button class="cart-item-qbtn" onclick="mudarQtyItem(${item.id},-1)">−</button>
-            <span class="cart-item-qnum">${item.qty}</span>
-            <button class="cart-item-qbtn" onclick="mudarQtyItem(${item.id},1)">+</button>
+        <div class="ci-detail">${item.detalhe}${adicsStr ? '<br>+' + adicsStr : ''}</div>
+        ${obsHtml}
+        <div class="ci-footer">
+          <div class="ci-qty">
+            <button class="ci-qbtn" onclick="changeCartQty(${item.id},-1)">−</button>
+            <span class="ci-qnum">${item.qty}</span>
+            <button class="ci-qbtn" onclick="changeCartQty(${item.id},1)">+</button>
           </div>
-          <div class="cart-item-preco">R$ ${subtotal}</div>
+          <div class="ci-preco">R$ ${sub}</div>
         </div>
       </div>`;
   }).join('');
-  totalEl.textContent = 'R$ ' + state.cart.reduce((s, i) => s + i.unitario * i.qty, 0).toFixed(2);
+  const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
+  totalEl.textContent = 'R$ ' + total.toFixed(2);
 }
-
-function removerItem(id) {
+function removeItem(id) {
   state.cart = state.cart.filter(i => i.id !== id);
-  renderizarCarrinho();
-  atualizarCarrinhoFab();
+  renderCart();
+  updateFab();
 }
-
-function mudarQtyItem(id, d) {
+function changeCartQty(id, d) {
   const item = state.cart.find(i => i.id === id);
   if (!item) return;
   item.qty = Math.max(1, item.qty + d);
-  renderizarCarrinho();
-  atualizarCarrinhoFab();
+  renderCart();
+  updateFab();
 }
 
-// ── FINALIZAR ──
-function finalizarPedido() {
+// ── CHECKOUT ──
+function openCheckout() {
   if (state.cart.length === 0) return;
-  let msg = 'Olá! Quero fazer um pedido 🍇\n\n';
-  state.cart.forEach((item, idx) => {
-    const adicsStr = item.adics.length > 0
-      ? '\n   Adicionais: ' + item.adics.map(a => a.nome).join(', ') : '';
-    msg += `*${idx+1}. ${item.tipo} (x${item.qty}) – R$ ${(item.unitario * item.qty).toFixed(2)}*\n`;
-    msg += `   ${item.detalhe}${adicsStr}\n\n`;
-  });
+  state.pgto = null;
+  document.querySelectorAll('.pgto-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pixBox').classList.remove('show');
+  document.getElementById('trocoBox').classList.remove('show');
+  document.getElementById('endInput').value = '';
+  document.getElementById('nomeInput').value = '';
+  closeModal('mcart');
+  renderCheckoutResumo();
+  openModal('mcheckout');
+}
+function selectPgto(tipo) {
+  state.pgto = tipo;
+  document.querySelectorAll('.pgto-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pgto_' + tipo).classList.add('active');
+  document.getElementById('pixBox').classList.toggle('show', tipo === 'pix');
+  document.getElementById('trocoBox').classList.toggle('show', tipo === 'dinheiro');
+  if (tipo === 'pix') gerarPix();
+}
+function gerarPix() {
   const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
-  msg += `*Total do pedido: R$ ${total.toFixed(2)}*`;
+  // Chave Pix do dono — trocar pelo número real
+  const chavePix = '27996900904';
+  const nome = 'Kiacai Na Garrafa';
+  const cidade = 'Vila Velha';
+  const valor = total.toFixed(2);
+  // Payload EMV padrão Pix
+  function fmt(id, val) {
+    const len = String(val.length).padStart(2,'0');
+    return id + len + val;
+  }
+  function crc16(str) {
+    let crc = 0xFFFF;
+    for (let i = 0; i < str.length; i++) {
+      crc ^= str.charCodeAt(i) << 8;
+      for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+    }
+    return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
+  }
+  const gui  = fmt('00','BR.GOV.BCB.PIX') + fmt('01', chavePix);
+  const mai  = fmt('26', gui);
+  const txid = fmt('05','***');
+  const merch = fmt('59', nome.substring(0,25)) + fmt('60', cidade.substring(0,15)) + fmt('54', valor) + fmt('58','BR') + fmt('62', txid);
+  const partial = '000201' + mai + '52040000' + '5303986' + merch + '6304';
+  const payload = partial + crc16(partial);
+  document.getElementById('pixChave').textContent = payload;
+  // QR Code via API
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(payload);
+  document.getElementById('pixQrImg').src = qrUrl;
+}
+function copiarPix() {
+  const txt = document.getElementById('pixChave').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.getElementById('btnCopiar');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar código Pix', 2000);
+  });
+}
+function renderCheckoutResumo() {
+  const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
+  let html = state.cart.map(item => {
+    const sub = (item.unitario * item.qty).toFixed(2);
+    return `<div class="pr-linha"><span>🍇 ${item.tipo} x${item.qty}</span><span>R$ ${sub}</span></div>`;
+  }).join('');
+  document.getElementById('checkoutResumo').innerHTML = html;
+  document.getElementById('checkoutTotal').textContent = 'R$ ' + total.toFixed(2);
+}
+function finalizarPedido() {
+  const nome = document.getElementById('nomeInput').value.trim();
+  const end  = document.getElementById('endInput').value.trim();
+  if (!end) { alert('Por favor, preencha o endereço de entrega!'); return; }
+  if (!state.pgto) { alert('Escolha a forma de pagamento!'); return; }
+
+  const total = state.cart.reduce((s, i) => s + i.unitario * i.qty, 0);
+  let msg = '🍇 *PEDIDO KIAÇAÍ NA GARRAFA*\n\n';
+  msg += '📋 *ITENS DO PEDIDO:*\n';
+  state.cart.forEach((item, idx) => {
+    msg += `${idx+1}. *${item.tipo} x${item.qty}* — R$ ${(item.unitario * item.qty).toFixed(2)}\n`;
+    msg += `   ${item.detalhe}\n`;
+    if (item.adics.length > 0)
+      msg += `   ➕ Adicionais: ${item.adics.map(a => a.nome).join(', ')}\n`;
+    if (item.obs)
+      msg += `   📝 Obs: ${item.obs}\n`;
+    msg += '\n';
+  });
+  msg += `💰 *SUBTOTAL PRODUTOS: R$ ${total.toFixed(2)}*\n`;
+  msg += `🛵 *FRETE: a calcular (Uber Flash / 99 Entregas)*\n\n`;
+  msg += `📍 *ENDEREÇO DE ENTREGA:*\n${end}\n\n`;
+  const pgtoNomes = { pix: '📲 Pix', cartao: '💳 Cartão na entrega', dinheiro: '💵 Dinheiro' };
+  msg += `💳 *PAGAMENTO:* ${pgtoNomes[state.pgto]}\n`;
+  if (state.pgto === 'dinheiro') {
+    const troco = document.getElementById('trocoInput').value.trim();
+    if (troco) msg += `   💵 Vai pagar com: R$ ${troco} (troco para calcular)\n`;
+  }
+  if (nome) msg += `\n👤 *Nome:* ${nome}`;
+  msg += '\n\n_Aguardo confirmação do frete antes de finalizar o pedido!_ 🙏';
   window.open('https://wa.me/5527996900904?text=' + encodeURIComponent(msg), '_blank');
 }
