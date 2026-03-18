@@ -2,136 +2,208 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Kiaçaí Na Garrafa</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- MODAL GOURMET -->
-<div class="modal-overlay" id="modalGourmet" onclick="fecharSeOverlay(event)" style="display:none">
+<!-- ═══ MODAL GOURMET ═══ -->
+<div class="modal-overlay" id="mgourmet" onclick="closeIfOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🍫 Gourmet – R$ 20</div>
-    <div class="modal-sub">Escolha o sabor, adicionais e quantidade</div>
-    <div class="sabores-label">Escolha o sabor 👇</div>
+    <div class="modal-sub">Escolha o sabor, personalize e adicione ao carrinho</div>
+
+    <div class="slabel">Escolha o sabor 👇</div>
     <div class="sabores-grid">
-      <div class="sabor-btn" id="saborNutella" onclick="selecionarSabor('nutella')">
+      <div class="sabor-btn" id="s_nutella" onclick="selectSabor('nutella')">
         <span class="sabor-emoji">🍫</span>
         <div class="sabor-nome">Nutella</div>
-        <div class="sabor-ingredientes">Nutella + Ninho + Paçoca</div>
+        <div class="sabor-ing">Nutella + Ninho + Paçoca</div>
       </div>
-      <div class="sabor-btn" id="saborMaracuja" onclick="selecionarSabor('maracuja')">
+      <div class="sabor-btn" id="s_maracuja" onclick="selectSabor('maracuja')">
         <span class="sabor-emoji">🍊</span>
         <div class="sabor-nome">Maracujá</div>
-        <div class="sabor-ingredientes">Mousse de maracujá + Ninho</div>
+        <div class="sabor-ing">Mousse maracujá + Ninho</div>
       </div>
     </div>
-    <div class="adicionais-label">Adicionais (opcional)</div>
-    <div class="adicionais-grid">
-      <div class="adic-btn" onclick="toggleAdic(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
-      <div class="adic-btn" onclick="toggleAdic(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+
+    <div class="slabel">Adicionais (opcional)</div>
+    <div class="adics-grid">
+      <div class="adic-btn" onclick="toggleAdicG(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
     </div>
-    <div class="qty-label">Quantidade</div>
+
+    <div class="slabel">Quantidade</div>
     <div class="qty-row">
-      <button class="qty-btn" onclick="changeQtyGourmet(-1)">−</button>
-      <span class="qty-num" id="qtyGourmet">1</span>
-      <button class="qty-btn" onclick="changeQtyGourmet(1)">+</button>
+      <button class="qty-btn" onclick="changeQtyG(-1)">−</button>
+      <span class="qty-num" id="gQty">1</span>
+      <button class="qty-btn" onclick="changeQtyG(1)">+</button>
     </div>
+
+    <div class="slabel">Observações</div>
+    <textarea class="obs-input" id="gObs" rows="2" placeholder="Ex: sem paçoca, menos Ninho..."></textarea>
+
     <div class="resumo">
       <div class="resumo-linha"><span>🍫 Gourmet</span><span>R$ 20,00</span></div>
-      <div id="resumoAdics"></div>
-      <div class="resumo-total"><span>Total</span><span id="totalGourmet">R$ 20,00</span></div>
+      <div id="resumoG"></div>
+      <div class="resumo-total"><span>Total</span><span id="totalG">R$ 20,00</span></div>
     </div>
-    <button class="btn-confirmar" id="btnConfirmarGourmet" onclick="adicionarGourmetCarrinho()" disabled>
-      🛒 Adicionar ao carrinho
-    </button>
-    <button class="btn-fechar" onclick="fecharModal('modalGourmet')">Voltar</button>
+    <button class="btn-add" id="btnAddG" onclick="addGourmetCart()" disabled>🛒 Adicionar ao carrinho</button>
+    <button class="btn-back" onclick="closeModal('mgourmet')">Voltar</button>
   </div>
 </div>
 
-<!-- MODAL TRADICIONAL -->
-<div class="modal-overlay" id="modalTradicional" onclick="fecharSeOverlay(event)" style="display:none">
+<!-- ═══ MODAL TRADICIONAL ═══ -->
+<div class="modal-overlay" id="mtrad" onclick="closeIfOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🥛 Tradicional – R$ 15</div>
-    <div class="modal-sub">Personalize com adicionais e quantidade</div>
-    <div class="sabores-label">Composição</div>
-    <div class="tradicional-info">
+    <div class="modal-sub">Personalize e adicione ao carrinho</div>
+
+    <div class="slabel">Composição</div>
+    <div class="trad-info">
       <div class="trad-item">🥤 Açaí cremoso na garrafa</div>
       <div class="trad-item">🥛 Leite condensado</div>
       <div class="trad-item">🌸 Leite Ninho</div>
       <div class="trad-item">🍬 Paçoca</div>
     </div>
-    <div class="adicionais-label">Adicionais (opcional)</div>
-    <div class="adicionais-grid">
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
-      <div class="adic-btn" onclick="toggleAdicTrad(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+
+    <div class="slabel">Adicionais (opcional)</div>
+    <div class="adics-grid">
+      <div class="adic-btn" onclick="toggleAdicT(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
     </div>
-    <div class="qty-label">Quantidade</div>
+
+    <div class="slabel">Quantidade</div>
     <div class="qty-row">
-      <button class="qty-btn" onclick="changeQtyTrad(-1)">−</button>
-      <span class="qty-num" id="qtyTrad">1</span>
-      <button class="qty-btn" onclick="changeQtyTrad(1)">+</button>
+      <button class="qty-btn" onclick="changeQtyT(-1)">−</button>
+      <span class="qty-num" id="tQty">1</span>
+      <button class="qty-btn" onclick="changeQtyT(1)">+</button>
     </div>
+
+    <div class="slabel">Observações</div>
+    <textarea class="obs-input" id="tObs" rows="2" placeholder="Ex: sem paçoca, mais Ninho..."></textarea>
+
     <div class="resumo">
       <div class="resumo-linha"><span>🥛 Tradicional</span><span>R$ 15,00</span></div>
-      <div id="resumoAdicsTrad"></div>
-      <div class="resumo-total"><span>Total</span><span id="totalTradicional">R$ 15,00</span></div>
+      <div id="resumoT"></div>
+      <div class="resumo-total"><span>Total</span><span id="totalT">R$ 15,00</span></div>
     </div>
-    <button class="btn-confirmar" onclick="adicionarTradCarrinho()">
-      🛒 Adicionar ao carrinho
-    </button>
-    <button class="btn-fechar" onclick="fecharModal('modalTradicional')">Voltar</button>
+    <button class="btn-add" onclick="addTradCart()">🛒 Adicionar ao carrinho</button>
+    <button class="btn-back" onclick="closeModal('mtrad')">Voltar</button>
   </div>
 </div>
 
-<!-- MODAL CARRINHO -->
-<div class="modal-overlay" id="modalCarrinho" onclick="fecharSeOverlay(event)" style="display:none">
+<!-- ═══ MODAL CARRINHO ═══ -->
+<div class="modal-overlay" id="mcart" onclick="closeIfOverlay(event)" style="display:none">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">🛒 Meu Carrinho</div>
-    <div class="modal-sub">Revise seu pedido antes de enviar</div>
+    <div class="modal-sub">Revise os itens e siga para o checkout</div>
     <div id="cartLista"></div>
     <div class="cart-total-row">
-      <span class="cart-total-label">Total</span>
+      <span class="cart-total-label">Subtotal produtos</span>
       <span class="cart-total-val" id="cartTotalVal">R$ 0,00</span>
     </div>
-    <button class="btn-whatsapp-cart" onclick="finalizarPedido()">
-      💬 Finalizar pelo WhatsApp
-    </button>
-    <button class="btn-fechar" onclick="fecharModal('modalCarrinho')">Continuar comprando</button>
+    <button class="btn-checkout" onclick="openCheckout()">📋 Finalizar pedido</button>
+    <button class="btn-back" onclick="closeModal('mcart')">Continuar comprando</button>
   </div>
 </div>
 
-<!-- CARRINHO FAB -->
-<div class="cart-fab" id="cartFab" style="display:none">
-  <button class="cart-btn" onclick="abrirCarrinho()">
-    🛒 <span class="cart-badge" id="cartBadge">0</span>
-    Ver carrinho · <span class="cart-total-fab" id="cartTotalFab">R$ 0,00</span>
-  </button>
+<!-- ═══ MODAL CHECKOUT ═══ -->
+<div class="modal-overlay" id="mcheckout" onclick="closeIfOverlay(event)" style="display:none">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📋 Finalizar Pedido</div>
+    <div class="modal-sub">Preencha os dados para enviar pelo WhatsApp</div>
+
+    <label class="form-label">Seu nome (opcional)</label>
+    <input class="form-input" id="nomeInput" type="text" placeholder="Ex: João Silva">
+
+    <label class="form-label">📍 Endereço de entrega *</label>
+    <textarea class="form-textarea" id="endInput" rows="3" placeholder="Rua, número, bairro, complemento..."></textarea>
+
+    <div class="frete-aviso">
+      🛵 <strong>Sobre o frete:</strong> O valor será calculado via <strong>Uber Flash</strong> ou <strong>99 Entregas</strong> e informado pelo vendedor antes da confirmação. O pedido só é confirmado após você aceitar o valor do frete pelo WhatsApp.
+    </div>
+
+    <div class="slabel">Forma de pagamento</div>
+    <div class="pgto-options">
+      <div class="pgto-btn" id="pgto_pix" onclick="selectPgto('pix')">
+        <span class="pgto-emoji">📲</span>
+        <div class="pgto-nome">Pix</div>
+      </div>
+      <div class="pgto-btn" id="pgto_cartao" onclick="selectPgto('cartao')">
+        <span class="pgto-emoji">💳</span>
+        <div class="pgto-nome">Cartão</div>
+      </div>
+      <div class="pgto-btn" id="pgto_dinheiro" onclick="selectPgto('dinheiro')">
+        <span class="pgto-emoji">💵</span>
+        <div class="pgto-nome">Dinheiro</div>
+      </div>
+    </div>
+
+    <!-- PIX -->
+    <div class="pix-box" id="pixBox">
+      <div class="pix-chave-label">QR Code Pix (valor total do pedido)</div>
+      <div class="pix-qr"><img id="pixQrImg" src="" alt="QR Code Pix" style="width:100%;border-radius:8px;"></div>
+      <div class="pix-chave-label">Código copia e cola:</div>
+      <div class="pix-chave" id="pixChave"></div>
+      <button class="btn-copiar" id="btnCopiar" onclick="copiarPix()">📋 Copiar código Pix</button>
+    </div>
+
+    <!-- TROCO -->
+    <div class="troco-box" id="trocoBox">
+      <label class="form-label">💵 Vai pagar com quanto? (para calcular troco)</label>
+      <input class="form-input" id="trocoInput" type="number" placeholder="Ex: 50.00" style="margin-bottom:0">
+    </div>
+
+    <div class="slabel" style="margin-top:16px">Resumo do pedido</div>
+    <div class="pedido-resumo">
+      <div id="checkoutResumo"></div>
+      <div class="pr-total"><span>Subtotal</span><span id="checkoutTotal">R$ 0,00</span></div>
+      <div style="font-size:.68rem;color:rgba(255,215,0,.5);margin-top:6px;">+ frete a combinar via WhatsApp</div>
+    </div>
+
+    <button class="btn-wpp" onclick="finalizarPedido()">💬 Enviar pedido pelo WhatsApp</button>
+    <button class="btn-back" onclick="closeModal('mcheckout');openModal('mcart');renderCart()">← Voltar ao carrinho</button>
+  </div>
 </div>
 
-<!-- PÁGINA -->
+<!-- ═══ CARRINHO FAB ═══ -->
+<div class="cart-fab hidden" id="cartFab" onclick="openCarrinho()">
+  <div class="cart-fab-left">
+    <div class="cart-fab-icon">🛒</div>
+    <div class="cart-fab-info">
+      <span class="cart-fab-label">Ver carrinho</span>
+      <span class="cart-fab-count" id="fabCount">0 itens</span>
+    </div>
+  </div>
+  <div class="cart-fab-total" id="fabTotal">R$ 0,00</div>
+</div>
+
+<!-- ═══ PÁGINA ═══ -->
 <div class="wrap">
   <div class="hero">
     <div class="logo-ring"><div class="logo-inner">🍇</div></div>
     <h1 class="hero-title">Kiaçaí<br>Na Garrafa</h1>
     <p class="hero-sub">Açaí fresquinho na sua porta</p>
     <div class="badges">
-      <div class="badge hot">⚡ Entrega grátis até 3km</div>
+      <div class="badge hot">⚡ Só delivery</div>
       <div class="badge">📍 Vila Velha – ES</div>
       <div class="badge">🕐 Todos os dias</div>
-      <div class="badge">🛵 Delivery</div>
+      <div class="badge">🛵 Uber Flash / 99</div>
     </div>
   </div>
 
@@ -144,9 +216,9 @@
     </div>
   </div>
 
-  <div class="sec-title">🍫 Escolha seu sabor</div>
+  <div class="sec-title">🍫 Cardápio</div>
   <div class="planos">
-    <div class="plano tradicional" onclick="abrirModal('modalTradicional')">
+    <div class="plano tradicional" onclick="resetTrad();openModal('mtrad')">
       <span class="plano-emoji">🥛</span>
       <div class="plano-nome">Tradicional</div>
       <div class="plano-preco"><span>R$</span> 15</div>
@@ -156,24 +228,25 @@
         <li>Paçoca</li>
       </ul>
     </div>
-    <div class="plano gourmet" onclick="abrirModal('modalGourmet')">
+    <div class="plano gourmet" onclick="resetGourmet();openModal('mgourmet')">
       <div class="plano-star">⭐ TOP</div>
       <span class="plano-emoji">🍫</span>
       <div class="plano-nome">Gourmet</div>
       <div class="plano-preco"><span>R$</span> 20</div>
       <ul class="ingredientes">
         <li>2 sabores</li>
-        <li>Clique p/ escolher</li>
+        <li>Toque p/ escolher</li>
       </ul>
     </div>
   </div>
 
   <div class="sec-title">🛵 Entrega</div>
   <div class="entrega-box">
-    <div class="entrega-icon">🎉</div>
+    <div class="entrega-icon">🛵</div>
     <div>
-      <div class="entrega-titulo">Frete GRÁTIS até 3km!</div>
-      <div class="entrega-desc">Vila Velha e região. Peça agora pelo WhatsApp e receba rapidinho! 🚀</div>
+      <div class="entrega-titulo">Somente Delivery</div>
+      <div class="entrega-desc">Não temos loja física. Entregamos via <strong>Uber Flash</strong> ou <strong>99 Entregas</strong>.</div>
+      <div class="entrega-aviso">⚠️ O valor do frete será calculado pelo vendedor e informado antes da confirmação do pedido.</div>
     </div>
   </div>
 
