@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Kiaçaí Na Garrafa</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══ MODAL GOURMET ═══ -->
+<div class="modal-overlay" id="mgourmet" onclick="closeIfOverlay(event)" style="display:none">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🍫 Gourmet – R$ 20</div>
+    <div class="modal-sub">Escolha o sabor, personalize e adicione ao carrinho</div>
+
+    <div class="slabel">Escolha o sabor 👇</div>
+    <div class="sabores-grid">
+      <div class="sabor-btn" id="s_nutella" onclick="selectSabor('nutella')">
+        <span class="sabor-emoji">🍫</span>
+        <div class="sabor-nome">Nutella</div>
+        <div class="sabor-ing">Nutella + Ninho + Paçoca</div>
+      </div>
+      <div class="sabor-btn" id="s_maracuja" onclick="selectSabor('maracuja')">
+        <span class="sabor-emoji">🍊</span>
+        <div class="sabor-nome">Maracujá</div>
+        <div class="sabor-ing">Mousse maracujá + Ninho</div>
+      </div>
+    </div>
+
+    <div class="slabel">Adicionais (opcional)</div>
+    <div class="adics-grid">
+      <div class="adic-btn" onclick="toggleAdicG(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicG(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+    </div>
+
+    <div class="slabel">Quantidade</div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQtyG(-1)">−</button>
+      <span class="qty-num" id="gQty">1</span>
+      <button class="qty-btn" onclick="changeQtyG(1)">+</button>
+    </div>
+
+    <div class="slabel">Observações</div>
+    <textarea class="obs-input" id="gObs" rows="2" placeholder="Ex: sem paçoca, menos Ninho..."></textarea>
+
+    <div class="resumo">
+      <div class="resumo-linha"><span>🍫 Gourmet</span><span>R$ 20,00</span></div>
+      <div id="resumoG"></div>
+      <div class="resumo-total"><span>Total</span><span id="totalG">R$ 20,00</span></div>
+    </div>
+    <button class="btn-add" id="btnAddG" onclick="addGourmetCart()" disabled>🛒 Adicionar ao carrinho</button>
+    <button class="btn-back" onclick="closeModal('mgourmet')">Voltar</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL TRADICIONAL ═══ -->
+<div class="modal-overlay" id="mtrad" onclick="closeIfOverlay(event)" style="display:none">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🥛 Tradicional – R$ 15</div>
+    <div class="modal-sub">Personalize e adicione ao carrinho</div>
+
+    <div class="slabel">Composição</div>
+    <div class="trad-info">
+      <div class="trad-item">🥤 Açaí cremoso na garrafa</div>
+      <div class="trad-item">🥛 Leite condensado</div>
+      <div class="trad-item">🌸 Leite Ninho</div>
+      <div class="trad-item">🍬 Paçoca</div>
+    </div>
+
+    <div class="slabel">Adicionais (opcional)</div>
+    <div class="adics-grid">
+      <div class="adic-btn" onclick="toggleAdicT(this,'Banana',2)"><span class="adic-nome">🍌 Banana <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Morango',2)"><span class="adic-nome">🍓 Morango <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Nutella extra',3.50)"><span class="adic-nome">🍫 Nutella extra <span class="adic-check">✓</span></span><span class="adic-preco">+R$3,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Leite Ninho',2)"><span class="adic-nome">🥛 Leite Ninho <span class="adic-check">✓</span></span><span class="adic-preco">+R$2</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Paçoca',1.50)"><span class="adic-nome">🍬 Paçoca <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+      <div class="adic-btn" onclick="toggleAdicT(this,'Leite condensado',1.50)"><span class="adic-nome">🍶 Leite condensado <span class="adic-check">✓</span></span><span class="adic-preco">+R$1,50</span></div>
+    </div>
+
+    <div class="slabel">Quantidade</div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQtyT(-1)">−</button>
+      <span class="qty-num" id="tQty">1</span>
+      <button class="qty-btn" onclick="changeQtyT(1)">+</button>
+    </div>
+
+    <div class="slabel">Observações</div>
+    <textarea class="obs-input" id="tObs" rows="2" placeholder="Ex: sem paçoca, mais Ninho..."></textarea>
+
+    <div class="resumo">
+      <div class="resumo-linha"><span>🥛 Tradicional</span><span>R$ 15,00</span></div>
+      <div id="resumoT"></div>
+      <div class="resumo-total"><span>Total</span><span id="totalT">R$ 15,00</span></div>
+    </div>
+    <button class="btn-add" onclick="addTradCart()">🛒 Adicionar ao carrinho</button>
+    <button class="btn-back" onclick="closeModal('mtrad')">Voltar</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL CARRINHO ═══ -->
+<div class="modal-overlay" id="mcart" onclick="closeIfOverlay(event)" style="display:none">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🛒 Meu Carrinho</div>
+    <div class="modal-sub">Revise os itens e siga para o checkout</div>
+    <div id="cartLista"></div>
+    <div class="cart-total-row">
+      <span class="cart-total-label">Subtotal produtos</span>
+      <span class="cart-total-val" id="cartTotalVal">R$ 0,00</span>
+    </div>
+    <button class="btn-checkout" onclick="openCheckout()">📋 Finalizar pedido</button>
+    <button class="btn-back" onclick="closeModal('mcart')">Continuar comprando</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL CHECKOUT ═══ -->
+<!-- �? �? �?  MODAL CHECKOUT �? �? �?  -->
+<div class="modal-overlay" id="mcheckout" onclick="closeIfOverlay(event)" style="display:none">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📋 Finalizar Pedido</div>
+    <div class="modal-sub">Preencha os dados para enviar pelo WhatsApp</div>
+
+    <label class="form-label" for="nomeInput">Seu nome (opcional)</label>
+    <input class="form-input" id="nomeInput" type="text" placeholder="Ex: João Silva">
+
+    <label class="form-label" for="endInput">�?  Endereço de entrega *</label>
+    <textarea class="form-textarea" id="endInput" rows="3" placeholder="Rua, número, bairro, complemento..."></textarea>
+
+    <div class="frete-aviso" id="freteAvisoCheckout">
+      🛵 <strong>Sobre o frete:</strong> O valor será calculado via <strong>Uber Flash</strong> ou <strong>99 Entregas</strong> e informado pelo vendedor antes da confirmação. O pedido só é confirmado após você aceitar o valor do frete pelo WhatsApp.
+    </div>
+
+    <div class="slabel">Forma de pagamento</div>
+    <div class="pgto-options">
+      <div class="pgto-btn" id="pgto_pix" onclick="selectPgto('pix')">
+        <span class="pgto-emoji">📲</span>
+        <div class="pgto-nome">Pix</div>
+      </div>
+      <div class="pgto-btn" id="pgto_cartao" onclick="selectPgto('cartao')">
+        <span class="pgto-emoji">💳</span>
+        <div class="pgto-nome">Cartão</div>
+      </div>
+      <div class="pgto-btn" id="pgto_dinheiro" onclick="selectPgto('dinheiro')">
+        <span class="pgto-emoji">💵</span>
+        <div class="pgto-nome">Dinheiro</div>
+      </div>
+    </div>
+
+    <!-- PIX -->
+    <div class="pix-box" id="pixBox">
+      <div class="pix-chave-label">QR Code Pix (valor total do pedido)</div>
+      <div class="pix-qr"><img id="pixQrImg" src="" alt="QR Code Pix" style="width:100%;border-radius:8px;"></div>
+      <div class="pix-chave-label">Código copia e cola:</div>
+      <div class="pix-chave" id="pixChave"></div>
+      <button class="btn-copiar" id="btnCopiar" onclick="copiarPix()">📋 Copiar código Pix</button>
+    </div>
+
+    <!-- TROCO -->
+    <div class="troco-box" id="trocoBox">
+      <label class="form-label" for="trocoInput">💵 Vai pagar com quanto? (para calcular troco)</label>
+      <input class="form-input" id="trocoInput" type="number" placeholder="Ex: 50.00" style="margin-bottom:0">
+    </div>
+
+    <!-- PARABENS FRETE GRATIS -->
+    <div class="frete-parabens" id="freteParabens">
+      <span class="frete-parabens-emoji">🎉</span>
+      <div class="frete-parabens-titulo">Parabéns! Frete GRÁTIS!</div>
+      <div class="frete-parabens-sub">Você pediu 2 ou mais itens e ganhou entrega grátis! 🚀</div>
+    </div>
+
+    <div class="slabel" style="margin-top:16px">Resumo do pedido</div>
+    <div class="pedido-resumo">
+      <div id="checkoutResumo"></div>
+      <div class="pr-total"><span>Subtotal</span><span id="checkoutTotal">R$ 0,00</span></div>
+      <div style="font-size:.68rem;color:rgba(255,215,0,.5);margin-top:6px;">+ frete a combinar via WhatsApp</div>
+    </div>
+
+    <button class="btn-wpp" onclick="finalizarPedido()">💬 Enviar pedido pelo WhatsApp</button>
+    <button class="btn-back" onclick="closeModal('mcheckout');openModal('mcart');renderCart()">← Voltar ao carrinho</button>
+  </div>
+</div>
+
+<!-- ═══ CARRINHO FAB ═══ -->
+<div class="cart-fab hidden" id="cartFab" onclick="openCarrinho()">
+  <div class="cart-fab-left">
+    <div class="cart-fab-icon">🛒</div>
+    <div class="cart-fab-info">
+      <span class="cart-fab-label">Ver carrinho</span>
+      <span class="cart-fab-count" id="fabCount">0 itens</span>
+    </div>
+  </div>
+  <div class="cart-fab-total" id="fabTotal">R$ 0,00</div>
+</div>
+
+<!-- ═══ PÁGINA ═══ -->
+<div class="wrap">
+  <div class="hero">
+    <div class="logo-ring">
+      <img src="logo.jpg" alt="Logo Kiaçaí" style="width:100%;height:100%;border-radius:50%;object-fit:cover;animation:spin 8s linear infinite reverse;">
+    </div>
+    <h1 class="hero-title">Kiaçaí<br>Na Garrafa</h1>
+    <p class="hero-sub">Açaí fresquinho na sua porta</p>
+    <div class="badges">
+      <div class="badge hot">⚡ Só delivery</div>
+      <div class="badge">📍 Vila Velha – ES</div>
+      <div class="badge">🕐 Todos os dias</div>
+      <div class="badge">🛵 Uber Flash / 99</div>
+    </div>
+  </div>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner">
+    <div class="promo-icon">📦🔥</div>
+    <div class="promo-text">
+      <div class="promo-titulo">Peça 2 ou mais e ganhe<br>entrega GRÁTIS!</div>
+      <div class="promo-sub">Válido para qualquer combinação de sabores</div>
+    </div>
+  </div>
+
+  <div class="bottle-section">
+    <img class="bottle-img" src="garrafa.jpg" alt="Açaí na garrafa" />
+    <div>
+      <span class="bottle-tag">✨ Nosso produto</span>
+      <div class="bottle-name">Açaí na<br>Garrafa 🍇</div>
+      <p class="bottle-desc">Açaí cremoso, recheado e na medida certa. Chegando gelado na sua casa!</p>
+    </div>
+  </div>
+
+  <!-- GALERIA -->
+  <div class="sec-title">📸 Nossos Açaís</div>
+  <div class="galeria">
+    <div class="galeria-item" onclick="openLightbox(this.querySelector('img').src)">
+      <img src="galeria_1.jpg" alt="Açaí Tradicional" />
+      <div class="galeria-label">Gourmet 🍫</div>
+    </div>
+    <div class="galeria-item" onclick="openLightbox(this.querySelector('img').src)">
+      <img src="galeria_2.jpg" alt="Variedades" />
+      <div class="galeria-label">Gourmet 🍫</div>
+    </div>
+    <div class="galeria-item" onclick="openLightbox(this.querySelector('img').src)">
+      <img src="galeria_3.jpg" alt="Açaí Gourmet" />
+      <div class="galeria-label">Gourmet 🍫</div>
+    </div>
+  </div>
+
+  <div class="sec-title">🍫 Cardápio</div>
+  <div class="planos">
+    <div class="plano tradicional" onclick="resetTrad();openModal('mtrad')">
+      <span class="plano-emoji">🥛</span>
+      <div class="plano-nome">Tradicional</div>
+      <div class="plano-preco"><span>R$</span> 15</div>
+      <ul class="ingredientes">
+        <li>Leite condensado</li>
+        <li>Leite Ninho</li>
+        <li>Paçoca</li>
+      </ul>
+    </div>
+    <div class="plano gourmet" onclick="resetGourmet();openModal('mgourmet')">
+      <div class="plano-star">⭐ TOP</div>
+      <span class="plano-emoji">🍫</span>
+      <div class="plano-nome">Gourmet</div>
+      <div class="plano-preco"><span>R$</span> 20</div>
+      <ul class="ingredientes">
+        <li>2 sabores</li>
+        <li>Toque p/ escolher</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">🛵 Entrega</div>
+  <div class="entrega-box">
+    <div class="entrega-icon">🛵</div>
+    <div>
+      <div class="entrega-titulo">Somente Delivery</div>
+      <div class="entrega-desc">Não temos loja física. Entregamos via <strong>Uber Flash</strong> ou <strong>99 Entregas</strong>.</div>
+      <div class="entrega-aviso">⚠️ O valor do frete será calculado pelo vendedor e informado antes da confirmação do pedido.</div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Kiaçaí Na Garrafa · Vila Velha – ES
+    <div style="margin-top:10px;font-size:.6rem;color:rgba(255,248,240,.18);letter-spacing:1.5px;">
+      desenvolvido por <span style="color:rgba(168,85,247,.4);font-weight:700;">pyedrodev</span>
+    </div>
+  </footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
