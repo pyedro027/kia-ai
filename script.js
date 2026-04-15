@@ -3,7 +3,7 @@ const CONFIG = {
   pix_chave: '+5527996900904',
   pix_nome: 'KIACAIGARRA',
   pix_cidade: 'VILAVELHA',
-  whatsapp: '5527996900904'
+  whatsapp: '5527992935741'
 };
 
 // ── Estado global ──
